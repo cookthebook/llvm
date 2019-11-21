@@ -439,6 +439,9 @@ void ARMPassConfig::addPreRegAlloc() {
 
     if (!DisableA15SDOptimization)
       addPass(createA15SDOptimizerPass());
+
+    // TODO: add a flag for doing uXOM
+    addPass(createuXOMLoadStorePass());
   }
 }
 

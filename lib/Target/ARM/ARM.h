@@ -42,6 +42,7 @@ FunctionPass *createARMLoadStoreOptimizationPass(bool PreAlloc = false);
 FunctionPass *createARMExpandPseudoPass();
 FunctionPass *createARMConstantIslandPass();
 FunctionPass *createMLxExpansionPass();
+FunctionPass *createuXOMLoadStorePass();
 FunctionPass *createThumb2ITBlockPass();
 FunctionPass *createARMOptimizeBarriersPass();
 FunctionPass *createThumb2SizeReductionPass(

@@ -1,45 +1,46 @@
+#include "llvm/Support/Debug.h"
+#include "ARM.h"
+#include "ARMBaseInstrInfo.h"
 #include "llvm/CodeGen/MachineFunctionPass.h"
 using namespace llvm;
 
 namespace {
-  struct uXOMLoadStorePass : MachineFuncionPass {
+  struct uXOMLoadStorePass : public MachineFunctionPass {
     static char ID;
     uXOMLoadStorePass() : MachineFunctionPass(ID) {}
+
+    bool runOnMachineFunction(MachineFunction &Fn) override;
 
     StringRef getPassName() const override {
       return "uXOM Load/Store pass";
     }
 
   private:
-    void replaceLoadStore(MachineBasicBlock &MBB);
-  }
+    bool replaceLoadStore(MachineBasicBlock &MBB);
+  };
+  char uXOMLoadStorePass::ID = 0;
 }
 
-void
+bool
 uXOMLoadStorePass::replaceLoadStore(MachineBasicBlock &MBB) {
   MachineBasicBlock::reverse_iterator MII = MBB.rbegin(), E = MBB.rend();
   while (MII != E) {
     MachineInstr *MI = &*MII++;
-    
-    switch (MI->getOpcode()) {
-    case ARM::LDR:
-      break;
-    case ARM::LDRH:
-      break;
-    case ARM::LDRSH:
-      break;
-    case ARM::LDRB:
-      break;
-    case ARM::LDRSB:
-      break;
-    case ARM::STR:
-      break;
-    case ARM::STRH:
-      break;
-    case ARM::STRB:
-      break;
-    default:
-      break;
-    }
+    DEBUG_WITH_TYPE("uxom", dbgs() << "Current OpCode: " << MI->getOpcode() << "\n");
   }
+  
+  return false;
+}
+
+bool
+uXOMLoadStorePass::runOnMachineFunction(MachineFunction &Fn) {
+  bool Modified = false;
+  for (MachineBasicBlock &MBB : Fn) {
+    Modified |= replaceLoadStore(MBB);
+  }
+  return true;
+}
+
+FunctionPass *llvm::createuXOMLoadStorePass() {
+  return new uXOMLoadStorePass();
 }
